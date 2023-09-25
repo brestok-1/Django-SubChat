@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat</title>
+    <title>SubChat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -28,191 +28,104 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item text-center" id="signup-btn">
-                <a href="#" class="nav-link" data-toggle="modal" data-target="#"><span class="fa fa-user"></span><span
-                        class="d-none d-sm-inline d-xl-block px-1">Sign Up</span></a>
-            </li>
-            <li class="nav-item text-center" id="login-btn">
-                <a href="#" class="nav-link" data-toggle="modal" data-target="#"><i class="fas fa-sign-in-alt"></i><span
-                        class="d-none d-sm-inline d-xl-block px-1">Log In</span></a>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item text-center" id="signup-btn">
+                    <a href="{% url 'sign-out' %}" class="nav-link" data-toggle="modal" data-target="#"><span
+                            class="fa fa-user"></span><span
+                            class="d-none d-sm-inline d-xl-block px-1">Log Out</span></a>
+                </li>
+            {% else %}
+                <li class="nav-item text-center" id="signup-btn">
+                    <a href="{% url 'sign-up' %}" class="nav-link" data-toggle="modal" data-target="#"><span
+                            class="fa fa-user"></span><span
+                            class="d-none d-sm-inline d-xl-block px-1">Sign Up</span></a>
+                </li>
+                <li class="nav-item text-center" id="login-btn">
+                    <a href="{% url 'sign-in' %}" class="nav-link" data-toggle="modal" data-target="#"><i
+                            class="fas fa-sign-in-alt"></i><span
+                            class="d-none d-sm-inline d-xl-block px-1">Sign In</span></a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
 
 
-		<div class="container-fluid">
-			<div class="row justify-content-center h-100">
-				<div class="col-md-4 col-xl-3 chat"><div class="card mb-sm-3 mb-md-0 contacts_card" id="card">
-					<div class="card-header">
-						<div class="input-group">
-							<input type="text" placeholder="Search..." name="" class="form-control search">
-							<div class="input-group-prepend">
-								<span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-							</div>
-						</div>
-					</div>
-					<div class="card-body contacts_body">
-						<ui class="contacts">
-						<li class="active">
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
-								</div>
-								<div class="user_info">
-									<span>Khalid</span>
-									<p>6234513@gmail.com</p>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://2.bp.blogspot.com/-8ytYF7cfPkQ/WkPe1-rtrcI/AAAAAAAAGqU/FGfTDVgkcIwmOTtjLka51vineFBExJuSACLcBGAs/s320/31.jpg" class="rounded-circle user_img">
-								</div>
-								<div class="user_info">
-									<span>Taherah Big</span>
-									<p>6234513@gmail.com</p>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://i.pinimg.com/originals/ac/b9/90/acb990190ca1ddbb9b20db303375bb58.jpg" class="rounded-circle user_img">
-								</div>
-								<div class="user_info">
-									<span>Sami Rafi</span>
-									<p>6234513@gmail.com</p>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://static.turbosquid.com/Preview/001214/650/2V/boy-cartoon-3D-model_D.jpg" class="rounded-circle user_img">
-								</div>
-								<div class="user_info">
-									<span>Rashid Samim</span>
-									<p>6234513@gmail.com</p>
-								</div>
-							</div>
-						</li>
-						</ui>
-					</div>
-					<div class="card-footer"></div>
-				</div></div>
-				<div class="col-md-8 col-xl-6 chat">
-					<div class="card" id="secondcard">
-						<div class="card-header msg_head">
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="{% static 'chat.png' %}" class="rounded-circle user_img">
-								</div>
-								<div class="user_info">
-									<span>SubChat</span>
-									<p>1767 Messages</p>
-								</div>
-							</div>
-						</div>
-						<div class="card-body msg_card_body">
-							<div class="d-flex justify-content-start mb-4">
-								<div class="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
-								</div>
-								<div class="msg_cotainer">
-									Hi, how are you samim?
-									<span class="msg_time">8:40 AM, Today</span>
-								</div>
-							</div>
-							<div class="d-flex justify-content-end mb-4">
-								<div class="msg_cotainer_send">
-									Hi Khalid i am good tnx how about you?
-									<span class="msg_time_send">8:55 AM, Today</span>
-								</div>
-								<div class="img_cont_msg">
-							<img src="" class="rounded-circle user_img_msg">
-								</div>
-							</div>
-							<div class="d-flex justify-content-start mb-4">
-								<div class="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
-								</div>
-								<div class="msg_cotainer">
-									I am good too, thank you for your chat template
-									<span class="msg_time">9:00 AM, Today</span>
-								</div>
-							</div>
-							<div class="d-flex justify-content-end mb-4">
-								<div class="msg_cotainer_send">
-									You are welcome
-									<span class="msg_time_send">9:05 AM, Today</span>
-								</div>
-								<div class="img_cont_msg">
-							<img src="" class="rounded-circle user_img_msg">
-								</div>
-							</div>
-							<div class="d-flex justify-content-start mb-4">
-								<div class="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
-								</div>
-								<div class="msg_cotainer">
-									I am looking for your next templates
-									<span class="msg_time">9:07 AM, Today</span>
-								</div>
-							</div>
-							<div class="d-flex justify-content-end mb-4">
-								<div class="msg_cotainer_send">
-									Ok, thank you have a good day
-									<span class="msg_time_send">9:10 AM, Today</span>
-								</div>
-								<div class="img_cont_msg">
-						<img src="" class="rounded-circle user_img_msg">
-								</div>
-							</div>
-							<div class="d-flex justify-content-start mb-4">
-								<div class="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
-								</div>
-								<div class="msg_cotainer">
-									Bye, see you
-									<span class="msg_time">9:12 AM, Today</span>
-								</div>
-							</div>
-							<div class="d-flex justify-content-start mb-4">
-								<div class="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
-								</div>
-								<div class="msg_cotainer">
-									Bye, see you
-									<span class="msg_time">9:12 AM, Today</span>
-								</div>
-							</div>
-							<div class="d-flex justify-content-start mb-4">
-								<div class="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
-								</div>
-								<div class="msg_cotainer">
-									Bye, see you
-									<span class="msg_time">9:12 AM, Today</span>
-								</div>
-							</div>
-						</div>
-						<div class="card-footer">
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
-								</div>
-								<textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
-								<div class="input-group-append">
-									<span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+<div class="container-fluid">
+    <div class="row justify-content-center h-100">
+        <div class="col-md-4 col-xl-3 chat">
+            <div class="card mb-sm-3 mb-md-0 contacts_card" id="card">
+                <div class="card-header">
+                    <div class="input-group">
+                        <input type="text" placeholder="Search..." name="" class="form-control search">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body contacts_body">
+                    <ui class="contacts">
+                        {% for user in users %}
+                            <li class="{% if user.username == user.username %}active{% endif %}">
+                                <div class="d-flex bd-highlight">
+                                    <div class="img_cont">
+                                        <img src=""
+                                             class="rounded-circle user_img">
+                                    </div>
+                                    <div class="user_info">
+                                        <span>{{ user.username }}</span>
+                                        <p>{{ user.email }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ui>
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+        <div class="col-md-8 col-xl-6 chat">
+            <div class="card" id="secondcard">
+                <div class="card-header msg_head">
+                    <div class="d-flex bd-highlight">
+                        <div class="img_cont">
+                            <img src="{% static 'chat.png' %}" class="rounded-circle user_img">
+                        </div>
+                        <div class="user_info">
+                            <span>SubChat</span>
+                            <p id="messagecount">{{ messages.count }} Messages</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body msg_card_body">
+                    {% for message in messages %}
+                        <div class="d-flex justify-content-{% if message.user.username == user.username %}start{% else %}end{% endif %} mb-4">
+                        <div class="img_cont_msg">
+                            <img src="{{ message.user.image }}"
+                                 class="rounded-circle user_img_msg">
+                        </div>
+                        <div class="msg_cotainer">
+                            {{ message.text }}
+                            <span class="msg_time">{{ message.created_at|date:"g:i A, F jS"  }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <span class="input-group-text attach_btn">  </span>
+                        </div>
+                        <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
+                        <div class="input-group-append">
+                            <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -227,6 +140,9 @@
 
     const secondCard = document.getElementById('secondcard')
     secondCard.style.height = cardElement.offsetHeight + 'px'
+</script>
+<script>
+
 </script>
 </body>
 </html>
