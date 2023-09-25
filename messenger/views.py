@@ -12,7 +12,7 @@ from messenger.models import Message, CustomUser
 from messenger.utils import get_first_message_id
 
 
-class ChatView(CreateView):
+class ChatView(LoginRequiredMixin, CreateView):
     template_name = 'messenger/main.html'
     form_class = CreateMessage
     success_url = reverse_lazy('messenger:home')

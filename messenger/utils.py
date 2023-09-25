@@ -1,4 +1,7 @@
+import random
+
 from messenger.models import CustomUser, Message
+from PIL import Image, ImageDraw
 
 
 def get_first_message_id(user: CustomUser) -> int:
@@ -16,3 +19,20 @@ def get_first_message_id(user: CustomUser) -> int:
         user.last_message_id = first_message_id
         user.save()
     return first_message_id
+
+
+def generate_user_thumbnail(first_letter: str):
+    random_color = random.choice(["red", "yellow", "blue", "purple", "green"])
+    image = Image.new("RGB", (200, 200), f"{random_color}")
+
+    mask = Image.new("L", image.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.ellipse((0, 0, image.size[0], image.size[1]), fill=255)
+
+    image.putalpha(mask)
+
+    letter = ImageDraw.Draw(image)
+    letter.text((75, 75), f"{first_letter}", fill="white", font=("Arial", 100))
+
+    image.save("avatar.png")
+    return image
