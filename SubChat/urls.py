@@ -21,7 +21,7 @@ from messenger.views import SignInView, SignUpView, logoutuser
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('messenger.urls', namespace='messenger')),
-    path('users/sign-in', SignInView.as_view(), name='sign-in'),
-    path('users/sign-up', SignUpView.as_view(), name='sign-up'),
-    path('users/logout', logoutuser, name='sign-out'),
+    path('users/sign-in/', SignInView.as_view(), name='sign-in'),
+    path('users/sign-up/', SignUpView.as_view(), name='sign-up'),
+    path('users/logout/', logoutuser, name='sign-out'),
 ]

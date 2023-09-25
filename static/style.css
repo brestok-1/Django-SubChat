@@ -221,3 +221,8 @@ margin-bottom: 15px !important;
 ::-webkit-scrollbar {
     width: 0;
 }
+
+.a-account:hover{
+    color: #00baff;
+    text-decoration: none;
+}
