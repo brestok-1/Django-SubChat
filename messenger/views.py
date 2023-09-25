@@ -40,7 +40,7 @@ class SignInView(LoginView):
 class SignUpView(CreateView):
     form_class = UserRegistrationForm
     template_name = 'messenger/sign-up.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('sign-in')
 
 
 @login_required

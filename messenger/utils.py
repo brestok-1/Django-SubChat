@@ -1,7 +1,7 @@
 import random
 
 from messenger.models import CustomUser, Message
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 def get_first_message_id(user: CustomUser) -> int:
@@ -21,8 +21,8 @@ def get_first_message_id(user: CustomUser) -> int:
     return first_message_id
 
 
-def generate_user_thumbnail(first_letter: str):
-    random_color = random.choice(["red", "yellow", "blue", "purple", "green"])
+def generate_user_thumbnail(first_letter: str, font_size: int = 140):
+    random_color = random.choice(["red", "orange", "blue", "purple", "green"])
     image = Image.new("RGB", (200, 200), f"{random_color}")
 
     mask = Image.new("L", image.size, 0)
@@ -31,8 +31,12 @@ def generate_user_thumbnail(first_letter: str):
 
     image.putalpha(mask)
 
+    font = ImageFont.truetype("static/ArialRegular.ttf", font_size)
+    left, top, width, height = font.getbbox(first_letter)
+    x_offset = (image.size[0] - width - left) // 2
+    y_offset = (image.size[1] - height - top) // 2
     letter = ImageDraw.Draw(image)
-    letter.text((75, 75), f"{first_letter}", fill="white", font=("Arial", 100))
+    letter.text((x_offset, y_offset), f"{first_letter}", fill="white", font=font)
 
     image.save("avatar.png")
     return image
