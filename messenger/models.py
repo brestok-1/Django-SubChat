@@ -48,7 +48,8 @@ class Message(models.Model):
                 'message': {
                     'username': self.user.username,
                     'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                    'text': self.text
+                    'text': self.text,
+                    'image_url': self.user.image.url,
                 }
             }
         )

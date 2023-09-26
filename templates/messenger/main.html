@@ -9,11 +9,6 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
           integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
@@ -66,10 +61,10 @@
                 <div class="card-body contacts_body">
                     <ui class="contacts">
                         {% for user in users %}
-                            <li class="{% if user.username == user.username %}active{% endif %}">
+                            <li class="{% if user.username == request.user.username %}active{% endif %}">
                                 <div class="d-flex bd-highlight">
                                     <div class="img_cont">
-                                        <img src=""
+                                        <img src="{{ user.image.url }}"
                                              class="rounded-circle user_img">
                                     </div>
                                     <div class="user_info">
@@ -85,7 +80,7 @@
             </div>
         </div>
         <div class="col-md-8 col-xl-6 chat">
-            <div class="card" id="secondcard">
+            <div class="card" id="card2">
                 <div class="card-header msg_head">
                     <div class="d-flex bd-highlight">
                         <div class="img_cont">
@@ -97,37 +92,53 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body msg_card_body">
+                <div class="card-body msg_card_body" id="secondcard">
                     {% for message in messages %}
-                        <div class="d-flex justify-content-{% if message.user.username == user.username %}start{% else %}end{% endif %} mb-4">
-                        <div class="img_cont_msg">
-                            <img src="{{ message.user.image }}"
-                                 class="rounded-circle user_img_msg">
+                        <div class="d-flex justify-content-{% if message.user.username != user.username %}start{% else %}end{% endif %} mb-4">
+                            <div class="img_cont_msg">
+                                <img src="{{ message.user.image.url }}"
+                                     class="rounded-circle user_img_msg">
+                            </div>
+                            <div class="msg_cotainer d-inline-block w-50">
+                                {{ message.text|linebreaksbr }}
+                                <span class="msg_time">{{ message.created_at|date:"m/d h:i A" }}</span>
+                            </div>
                         </div>
-                        <div class="msg_cotainer">
-                            {{ message.text }}
-                            <span class="msg_time">{{ message.created_at|date:"g:i A, F jS"  }}</span>
-                        </div>
-                    </div>
                     {% endfor %}
                 </div>
                 <div class="card-footer">
-                    <div class="input-group">
-                        <div class="input-group-append">
-                            <span class="input-group-text attach_btn">  </span>
+                    <form action="{% url 'messenger:home' %}" id="sendmessageform" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <div class="input-group-append">
+                                <span class="input-group-text attach_btn">  </span>
+                            </div>
+                            {{ form.text }}
+                            <div class="input-group-append">
+                                <span class="input-group-text send_btn" id="messagearea"><i
+                                        class="fas fa-location-arrow"></i></span>
+                            </div>
                         </div>
-                        <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
-                        <div class="input-group-append">
-                            <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+<script>
+    document.getElementById("messagearea").addEventListener("click", function () {
+        document.getElementById("sendmessageform").submit();
+    });
+</script>
 <script>
     const cardElement = document.getElementById('card')
     const navElement = document.getElementById('navbar')
@@ -138,11 +149,52 @@
     const windowHeight = window.innerHeight
     cardElement.style.height = windowHeight - (marginBottomPx + marginTop + navHeight) + 'px'
 
-    const secondCard = document.getElementById('secondcard')
+    const secondCard = document.getElementById('card2')
     secondCard.style.height = cardElement.offsetHeight + 'px'
 </script>
 <script>
-
+    const ws_url = '/ws/new-message/'
+    const socket = new WebSocket("ws://" + window.location.host + ws_url);
+    const mychat = document.getElementById('secondcard')
+    mychat.scrollTop = mychat.scrollHeight
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data)
+        const created_at = new Date(data.created_at).toLocaleString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit'
+        }).replace(',', '');
+        const newMessage = document.createElement('div')
+        if (data.username === `{{ request.user }}`) {
+            newMessage.innerHTML = `<div class="d-flex justify-content-end mb-4">
+                            <div class="img_cont_msg">
+                                <img src="${data.image_url}"
+                                     class="rounded-circle user_img_msg">
+                            </div>
+                            <div class="msg_cotainer d-inline-block w-50">
+                                ${data.text}
+                                <span class="msg_time">${created_at}</span>
+                            </div>
+                        </div>`
+        } else {
+            newMessage.innerHTML = `<div class="d-flex justify-content-start mb-4">
+                            <div class="img_cont_msg">
+                                <img src="${data.image_url}"
+                                     class="rounded-circle user_img_msg">
+                            </div>
+                            <div class="msg_cotainer d-inline-block w-50">
+                                ${data.text}
+                                <span class="msg_time">${created_at}</span>
+                            </div>
+                        </div>`
+        }
+        mychat.appendChild(newMessage)
+        const messageCount = document.getElementById('messagecount')
+        const currentNumber = parseInt(messageCount.innerText);
+        messageCount.innerText = currentNumber + 1;
+        mychat.scrollTop = mychat.scrollHeight
+    }
 </script>
 </body>
 </html>

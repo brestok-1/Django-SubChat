@@ -8,7 +8,7 @@ from messenger.models import Message, CustomUser
 
 class CreateMessage(forms.ModelForm):
     text = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text', 'placeholder': 'Type your message',
+        widget=forms.Textarea(attrs={'class': 'form-control type_msg', 'type': 'text', 'placeholder': 'Type your message...',
                                       'aria-describedby': "button-addon2"}),
         required=True)
 

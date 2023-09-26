@@ -24,8 +24,10 @@ class MessageCreateConsumer(AsyncWebsocketConsumer):
         username = event['message']['username']
         text = event['message']['text']
         created_at = event['message']['created_at']
+        image_url = event['message']['image_url']
         await self.send(text_data=json.dumps({
             'username': username,
             'text': text,
-            'created_at': created_at
+            'created_at': created_at,
+            'image_url': image_url,
         }))
